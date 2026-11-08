@@ -2,14 +2,14 @@
  * Express app configuration.
  * Responsibilities:
  *  - Base routes (/, /health)
- *  - Auto-mount all routers in src/routes/auto/*.route.js
+ *  - Explicitly mount all routers to ensure test coverage tracking
  *  - Global error handler (consistent JSON for errors)
  */
 import express from 'express'
 import { errorHandler } from './utils/errorHandler.js'
-import boomRouter from './routes/auto/boom.route.js'
-import infoRouter from './routes/auto/info.route.js'
 import versionRouter from './routes/auto/version.route.js'
+import infoRouter from './routes/auto/info.route.js'
+import boomRouter from './routes/auto/boom.route.js'
 
 const app = express()
 
@@ -17,10 +17,10 @@ const app = express()
 app.get('/', (_req, res) => res.json({ ok: true, message: 'Hello from CI/CD demo 👋' }))
 app.get('/health', (_req, res) => res.status(200).send('OK'))
 
-// Mount all application routers.
-app.use('/', boomRouter)
-app.use('/', infoRouter)
+// Montage explicite des routes
 app.use('/', versionRouter)
+app.use('/', infoRouter)
+app.use('/', boomRouter)
 
 // Global error middleware last
 app.use(errorHandler)
